@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32901.82
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GAME307_StudentTemplateVS2019", "GAME307_StudentTemplateVS2019\GAME307_StudentTemplateVS2019.vcxproj", "{FEEBF6E3-7495-48AB-BF9D-AEC026063146}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FEEBF6E3-7495-48AB-BF9D-AEC026063146}.Debug|x64.ActiveCfg = Debug|x64
+		{FEEBF6E3-7495-48AB-BF9D-AEC026063146}.Debug|x64.Build.0 = Debug|x64
+		{FEEBF6E3-7495-48AB-BF9D-AEC026063146}.Debug|x86.ActiveCfg = Debug|Win32
+		{FEEBF6E3-7495-48AB-BF9D-AEC026063146}.Debug|x86.Build.0 = Debug|Win32
+		{FEEBF6E3-7495-48AB-BF9D-AEC026063146}.Release|x64.ActiveCfg = Release|x64
+		{FEEBF6E3-7495-48AB-BF9D-AEC026063146}.Release|x64.Build.0 = Release|x64
+		{FEEBF6E3-7495-48AB-BF9D-AEC026063146}.Release|x86.ActiveCfg = Release|Win32
+		{FEEBF6E3-7495-48AB-BF9D-AEC026063146}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F11B2D14-5D8F-4878-8FC5-CBB7BF932DDC}
+	EndGlobalSection
+EndGlobal
