@@ -7,6 +7,10 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <fstream>
+#include "GameManager.h"
+#include "Scene.h"
+#include "Character.h"
 
 using namespace std;
 
@@ -15,8 +19,53 @@ using namespace std;
 #define DEFAULT_BUFLEN 512
 #define EXIT "!exit"
 
-int main1()
+int JoinServer() {
+	int socketCreated = 0;
+	struct sockaddr_in ipOfServer;
+	socketCreated = socket(AF_INET, SOCK_STREAM, 0);
+	memset(&ipOfServer, '0', sizeof(ipOfServer));
+	ipOfServer.sin_family = AF_INET;
+
+	if (inet_pton(AF_INET, "127.0.0.1", &ipOfServer.sin_addr) <= 0) {
+		printf("Error: Wrong address");
+		return -1;
+	}
+	ipOfServer.sin_port = htons(2017);
+
+	if (connect(socketCreated, (struct sockaddr*)&ipOfServer, sizeof(ipOfServer)) < 0) {
+		printf("Error: Connection Failed");
+		return -1;
+	}
+	return socketCreated;
+}
+
+int main(int atgc, char** argv)
 {
+
+	GameManager* ptr = new GameManager();
+	bool status = ptr->OnCreate();
+	if (status == true) {
+		ptr->Run();
+	}
+	else if (status == false) {
+		std::cerr << "Fatal error occured. Cannot start this program" << std::endl;
+	}
+
+	constexpr int datasendSize = 256;
+	char datasend[datasendSize];
+	memset(datasend, '\0', datasendSize);
+
+	int socketforClient = JoinServer();
+
+	cout << "Player joined!" << endl;
+	cout << "Fetching rnd seed from server..." << endl;
+
+	//int sizeRead = read(socketforClient, datasend, datasendSize);
+
+	long rndSeed;
+	memcpy(&rndSeed, &datasend[0], sizeof(long));
+	srand(rndSeed);
+
 	WSADATA wsaData;
 	SOCKET ConnectSocket = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -70,6 +119,8 @@ int main1()
 
 	closesocket(ConnectSocket);
 	WSACleanup();
+	delete ptr;
+
 	system("pause");
 	return 0;
 }

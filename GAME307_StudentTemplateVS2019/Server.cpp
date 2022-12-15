@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
+#include "GameManager.h"
+#include "Scene.h"
+#include "Character.h"
 
 using namespace std;
 
@@ -17,8 +20,49 @@ using namespace std;
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
 
-int main(void)
+int WaitForPlayerToJoin() {
+	int clientListen = 0;
+	int socketForClient = 0;
+	struct sockaddr_in ipOfServer;
+	clientListen = socket(AF_INET, SOCK_STREAM, 0);
+	memset(&ipOfServer, '0', sizeof(ipOfServer));
+	ipOfServer.sin_family = AF_INET;
+	ipOfServer.sin_addr.s_addr = htonl(INADDR_ANY);
+	ipOfServer.sin_port = htons(2017);
+	bind(clientListen, (struct sockaddr*)&ipOfServer, sizeof(ipOfServer));
+	listen(clientListen, 1);
+
+	socketForClient = accept(clientListen, (struct sockaddr*)NULL, NULL);
+	return socketForClient;
+}
+
+int main1(int atgc, char** argv)
 {
+
+	GameManager* ptr = new GameManager();
+	bool status = ptr->OnCreate();
+	if (status == true) {
+		ptr->Run();
+	}
+	else if (status == false) {
+		std::cerr << "Fatal error occured. Cannot start this program" << std::endl;
+	}
+	
+	long currentTime = static_cast<long>(time(NULL));
+	srand(currentTime);
+
+	int socketforClient = WaitForPlayerToJoin();
+	constexpr int datasendSize = 256;
+	char datasend[datasendSize];
+	memset(datasend, '\0', datasendSize);
+
+	cout << "Player joined at socket " << socketforClient << endl;
+	cout << "Sending seed nr for rnd: " << currentTime << endl;
+
+	memcpy(&datasend[0], &currentTime, sizeof(time_t));
+	send(socketforClient, datasend, sizeof(time_t),0);
+	memset(datasend, '\0', datasendSize);
+
 	WSADATA wsaData;
 	int iResult;
 
@@ -140,7 +184,7 @@ int main(void)
 
 	}
 	// Receive until the peer shuts down the connection
-	/*do {
+	do {
 		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
 		if (iResult > 0) {
 			cout << "Recieved String: ";
@@ -168,7 +212,7 @@ int main(void)
 			return 1;
 		}
 
-	} while (iResult > 0); */
+	} while (iResult > 0); 
 
 	// shutdown the connection since we're done
 	iResult = shutdown(ClientSocket, SD_SEND);
@@ -183,6 +227,7 @@ int main(void)
 	// cleanup
 	closesocket(ClientSocket);
 	WSACleanup();
+	delete ptr;
 
 	system("pause");
 	return 0;
